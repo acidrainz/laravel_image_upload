@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+
+Route::get('/', 'UploadController@index')->name('home');
 Route::post('/upload', 'UploadController@doUpload')->name('upload');
+Route::post('/search', 'UploadController@doSearch')->name('search');

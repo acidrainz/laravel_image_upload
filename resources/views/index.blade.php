@@ -9,6 +9,11 @@
 
 
 </head>
+<style>
+    .clear{
+        clear:both;
+    }
+</style>
 <body>
 
     <div class="container">
@@ -84,7 +89,54 @@
 
           </div>
         </div>
+        <div class="panel panel-primary">
+
+            <div class="panel-heading">
+                <h2>Image Uploaded</h2>
+            </div>
+             <div class="panel-body">
+                    <form id="search-form">
+                        @csrf
+                       <div class="form-row ">
+                             <div class="col-md-6">
+                                <input type="text" name="keywords" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" onClick="search();" class="btn btn-success">Search Tags</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br class="clear"/><br/><br/>
+                    <div class="container">
+                        <div class="col-md-12" id="image-gallery">
+                            @foreach ($data as $item)
+                                <div class="col-md-12 clearfix">
+                                   <div class="img-thumbnail col-md-4">
+                                        <img src = "{{asset('/images/'.$item->filename)}}" alt="image" class="img-responsive"/>
+                                   </div>
+                                   <div class="title col-md-8">
+                                       <h2>{{$item->title}}</h2>
+                                       <div class="tags">
+                                            <ul>
+                                                @foreach ($item->tags as $tag)
+                                                    <li>{{$tag->tag}}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div> <br class="clear"/><br/>
+                            @endforeach
+
+
+                        </div>
+                    </div>
+
+              </div>
+        </div>
+
+
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
         var i = 1; // Global Variable for Name
 
@@ -96,6 +148,19 @@
             y.setAttribute("Placeholder", "Input image title");
             document.getElementById("tag-form").appendChild(y);
             i++;
+        }
+        function search(){
+            var formData = $('#search-form').serialize();
+            console.log(formData);
+            $.ajax({
+                method: "POST",
+                url: "{{url('/search')}}",
+                data: formData,
+                datatype: 'html'
+                }).done(function( data ) {
+                $('#image-gallery').html(data.html);
+            });
+
         }
     </script>
 </body>
